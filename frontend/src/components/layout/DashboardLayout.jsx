@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 
 export const DashboardLayout = ({ children, chatPanel }) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   return (
     <div data-testid="dashboard-layout" className="flex h-screen w-full bg-slate-50 overflow-hidden">
