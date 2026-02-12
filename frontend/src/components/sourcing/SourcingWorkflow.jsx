@@ -1,20 +1,23 @@
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
-import { Badge } from "../ui/badge";
 import { ScrollArea } from "../ui/scroll-area";
-import { CandidateCard } from "./CandidateCard";
+import { CandidateTable } from "./CandidateTable";
+import { OutreachDialog } from "./OutreachDialog";
 import { getCandidatesByJobAndSource, getConsolidatedCandidates } from "../../data/mockData";
 import { Database, Globe, Linkedin, Trophy, Search } from "lucide-react";
+import { toast } from "sonner";
 
 const sourcingTabs = [
-  { key: "talentMatch", label: "Talent Match", icon: Database, description: "Internal database matches" },
-  { key: "syndication", label: "Syndication", icon: Globe, description: "Job board applicants" },
-  { key: "autoSourcing", label: "Auto Sourcing", icon: Linkedin, description: "LinkedIn passive sourcing" },
-  { key: "consolidated", label: "Consolidated", icon: Trophy, description: "Ranked from all sources" },
+  { key: "talentMatch", label: "Talent Match", icon: Database },
+  { key: "syndication", label: "Syndication", icon: Globe },
+  { key: "autoSourcing", label: "Auto Sourcing", icon: Linkedin },
+  { key: "consolidated", label: "Consolidated", icon: Trophy },
 ];
 
 export const SourcingWorkflow = ({ jobId }) => {
   const [activeTab, setActiveTab] = useState("talentMatch");
+  const [outreachOpen, setOutreachOpen] = useState(false);
+  const [outreachCandidates, setOutreachCandidates] = useState([]);
 
   const talentMatchCandidates = getCandidatesByJobAndSource(jobId, "talentMatch");
   const syndicationCandidates = getCandidatesByJobAndSource(jobId, "syndication");
@@ -28,13 +31,14 @@ export const SourcingWorkflow = ({ jobId }) => {
     consolidated: consolidatedCandidates.length,
   };
 
-  const renderCandidateList = (candidates, showRank = false) => (
-    <div className="space-y-2">
-      {candidates.map((c, idx) => (
-        <CandidateCard key={c.id} candidate={c} rank={showRank ? idx + 1 : null} />
-      ))}
-    </div>
-  );
+  const handleSendMessage = (candidates) => {
+    setOutreachCandidates(candidates);
+    setOutreachOpen(true);
+  };
+
+  const handleMoveToNext = (candidate) => {
+    toast.success(`${candidate.name} moved to Screening stage`);
+  };
 
   const TabHeader = ({ tab }) => {
     const Icon = tab.icon;
@@ -49,18 +53,27 @@ export const SourcingWorkflow = ({ jobId }) => {
     );
   };
 
+  const tabData = {
+    talentMatch: talentMatchCandidates,
+    syndication: syndicationCandidates,
+    autoSourcing: autoSourcingCandidates,
+    consolidated: consolidatedCandidates,
+  };
+
+  const tabBanners = {
+    talentMatch: { bg: "bg-sky-50/50 border-sky-100", text: "text-sky-700", icon: Database, msg: "Matching from your internal talent database. These candidates have been previously engaged." },
+    syndication: { bg: "bg-amber-50/50 border-amber-100", text: "text-amber-700", icon: Globe, msg: "Candidates sourced from Naukri, Indeed, LinkedIn Jobs and other job boards." },
+    autoSourcing: { bg: "bg-violet-50/50 border-violet-100", text: "text-violet-700", icon: Linkedin, msg: "AI-discovered passive candidates from LinkedIn. These may not be actively job seeking." },
+    consolidated: { bg: "bg-indigo-50/50 border-indigo-100", text: "text-indigo-700", icon: Trophy, msg: "All candidates ranked by AI match score across all sourcing channels." },
+  };
+
   return (
     <div data-testid="sourcing-workflow" className="flex-1 flex flex-col overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
-        <div>
-          <h3 className="text-lg font-semibold text-slate-800" style={{ fontFamily: 'Manrope, sans-serif' }}>
-            Sourcing Workflow
-          </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
-            AI-powered candidate discovery across multiple channels
-          </p>
-        </div>
+        <h3 className="text-lg font-semibold text-slate-800" style={{ fontFamily: 'Manrope, sans-serif' }}>
+          Sourcing Workflow
+        </h3>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 rounded-lg">
             <Search className="h-3.5 w-3.5 text-slate-400" />
@@ -90,47 +103,35 @@ export const SourcingWorkflow = ({ jobId }) => {
         </TabsList>
 
         <ScrollArea className="flex-1 mt-4">
-          <TabsContent value="talentMatch" className="mt-0">
-            <div className="mb-4 p-3 bg-sky-50/50 border border-sky-100 rounded-lg">
-              <p className="text-xs text-sky-700">
-                <Database className="h-3 w-3 inline mr-1.5" />
-                Matching from your internal talent database. These candidates have been previously engaged.
-              </p>
-            </div>
-            {renderCandidateList(talentMatchCandidates)}
-          </TabsContent>
-
-          <TabsContent value="syndication" className="mt-0">
-            <div className="mb-4 p-3 bg-amber-50/50 border border-amber-100 rounded-lg">
-              <p className="text-xs text-amber-700">
-                <Globe className="h-3 w-3 inline mr-1.5" />
-                Candidates sourced from Naukri, Indeed, LinkedIn Jobs and other job boards.
-              </p>
-            </div>
-            {renderCandidateList(syndicationCandidates)}
-          </TabsContent>
-
-          <TabsContent value="autoSourcing" className="mt-0">
-            <div className="mb-4 p-3 bg-violet-50/50 border border-violet-100 rounded-lg">
-              <p className="text-xs text-violet-700">
-                <Linkedin className="h-3 w-3 inline mr-1.5" />
-                AI-discovered passive candidates from LinkedIn. These may not be actively job seeking.
-              </p>
-            </div>
-            {renderCandidateList(autoSourcingCandidates)}
-          </TabsContent>
-
-          <TabsContent value="consolidated" className="mt-0">
-            <div className="mb-4 p-3 bg-indigo-50/50 border border-indigo-100 rounded-lg">
-              <p className="text-xs text-indigo-700">
-                <Trophy className="h-3 w-3 inline mr-1.5" />
-                All candidates ranked by AI match score across all sourcing channels.
-              </p>
-            </div>
-            {renderCandidateList(consolidatedCandidates, true)}
-          </TabsContent>
+          {Object.keys(tabData).map((key) => {
+            const banner = tabBanners[key];
+            const BannerIcon = banner.icon;
+            return (
+              <TabsContent key={key} value={key} className="mt-0">
+                <div className={`mb-4 p-3 ${banner.bg} border rounded-lg`}>
+                  <p className={`text-xs ${banner.text}`}>
+                    <BannerIcon className="h-3 w-3 inline mr-1.5" />
+                    {banner.msg}
+                  </p>
+                </div>
+                <CandidateTable
+                  candidates={tabData[key]}
+                  onSendMessage={handleSendMessage}
+                  onMoveToNext={handleMoveToNext}
+                />
+              </TabsContent>
+            );
+          })}
         </ScrollArea>
       </Tabs>
+
+      {/* Outreach Dialog */}
+      <OutreachDialog
+        open={outreachOpen}
+        onOpenChange={setOutreachOpen}
+        candidates={outreachCandidates}
+        jobId={jobId}
+      />
     </div>
   );
 };
