@@ -1,0 +1,132 @@
+{
+  "design_strategy": {
+    "theme": "Clean Corporate / Soft Utility",
+    "emotional_tone": "Professional, Efficient, Intelligent, Flow-state",
+    "visual_style": "Minimalist SaaS, High-Legibility, Data-Dense but Breathable",
+    "archetype": "The Soft Utility (Archetype 4 variant)"
+  },
+  "typography": {
+    "font_family": {
+      "headings": "Manrope, sans-serif",
+      "body": "Inter, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-3xl font-bold tracking-tight text-slate-900",
+      "h2": "text-2xl font-semibold tracking-tight text-slate-800",
+      "h3": "text-xl font-medium text-slate-800",
+      "body_lg": "text-base leading-relaxed text-slate-600",
+      "body_sm": "text-sm leading-normal text-slate-500",
+      "caption": "text-xs font-medium text-slate-400 uppercase tracking-wider"
+    },
+    "imports": [
+      "@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');"
+    ]
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "base": "bg-slate-900",
+        "hover": "hover:bg-slate-800",
+        "text": "text-slate-900",
+        "foreground": "text-white"
+      },
+      "secondary": {
+        "base": "bg-white",
+        "border": "border-slate-200",
+        "text": "text-slate-600"
+      },
+      "accent": {
+        "base": "bg-indigo-600",
+        "light": "bg-indigo-50 text-indigo-700",
+        "hover": "hover:bg-indigo-700"
+      },
+      "background": {
+        "app": "bg-slate-50",
+        "card": "bg-white",
+        "sidebar": "bg-white border-l border-slate-200"
+      },
+      "status": {
+        "success": "bg-emerald-50 text-emerald-700 border-emerald-200",
+        "warning": "bg-amber-50 text-amber-700 border-amber-200",
+        "neutral": "bg-slate-100 text-slate-600"
+      }
+    },
+    "gradients": "NONE. Use flat colors and subtle borders only."
+  },
+  "layout_grid": {
+    "dashboard_shell": "flex h-screen w-full bg-slate-50 overflow-hidden",
+    "sidebar_nav": "w-64 flex-shrink-0 border-r border-slate-200 bg-white hidden md:flex flex-col",
+    "main_content": "flex-1 flex flex-col overflow-hidden",
+    "content_scroll": "flex-1 overflow-y-auto p-8",
+    "chat_panel": "w-96 flex-shrink-0 border-l border-slate-200 bg-white flex flex-col h-full shadow-sm",
+    "container_padding": "p-6 md:p-8 max-w-7xl mx-auto w-full"
+  },
+  "components": {
+    "job_card": {
+      "wrapper": "group relative flex flex-col p-6 bg-white border border-slate-200 rounded-xl hover:shadow-md hover:border-indigo-200 transition-all duration-200 cursor-pointer",
+      "title": "text-lg font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors",
+      "meta": "flex items-center gap-4 mt-4 text-sm text-slate-500",
+      "badge": "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800"
+    },
+    "pipeline_stepper": {
+      "container": "flex items-center w-full mb-8 border-b border-slate-200 pb-6",
+      "step_active": "flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-sm font-semibold ring-1 ring-indigo-200",
+      "step_inactive": "flex items-center gap-2 px-4 py-2 text-slate-500 text-sm font-medium hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors"
+    },
+    "candidate_card": {
+      "wrapper": "flex items-start gap-4 p-4 bg-white border border-slate-100 rounded-lg hover:border-indigo-100 hover:shadow-sm transition-all",
+      "avatar": "h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-sm",
+      "info": "flex-1 min-w-0",
+      "name": "text-sm font-medium text-slate-900 truncate",
+      "role": "text-xs text-slate-500 truncate"
+    },
+    "tabs": {
+      "list": "inline-flex h-10 items-center justify-center rounded-lg bg-slate-100 p-1 text-slate-500 w-full justify-start mb-6",
+      "trigger": "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm"
+    }
+  },
+  "image_urls": {
+    "logos": [
+      {
+        "url": "https://images.unsplash.com/photo-1628760584600-6c31148991e9?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "category": "company_logo",
+        "description": "Blue oval abstract logo (TechCorp)"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1756999223279-c6ecaf6ab0fe?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "category": "company_logo",
+        "description": "Swirling abstract logo (InnovateAI)"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1686140386811-099f53c0dd54?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "category": "company_logo",
+        "description": "Stylized P logo (Purple Systems)"
+      }
+    ]
+  },
+  "visual_enhancers": {
+    "shadows": "shadow-sm for cards, shadow-md for dropdowns/modals. No heavy drop shadows.",
+    "borders": "1px solid slate-200 everywhere. Rounded-lg or rounded-xl.",
+    "micro_interactions": "Buttons scale down 0.98 on click. Links underline or color shift on hover.",
+    "empty_states": "Use clean SVG icons or simple typography for empty states. No complex illustrations."
+  },
+  "instructions_to_main_agent": [
+    "1. IMPLEMENT THE LAYOUT FIRST: Create the 'DashboardLayout' component with the left sidebar, main content area, and the PERSISTENT right chat panel.",
+    "2. CHAT PANEL: This is a critical feature. It must be visible on all Sourcing tabs. It should feel like a 'Co-pilot'. Use a different background color (white) vs the main content (slate-50) to separate contexts.",
+    "3. JOB DETAILS: The Pipeline View is the hero. Make it clear which stage is active. When 'Sourcing' is active, render the Sub-workflow tabs below it.",
+    "4. SOURCING TABS: 'Talent Match', 'Syndication', 'Auto Sourcing', 'Consolidated'. Each tab content should list candidates.",
+    "5. CANDIDATE CARDS: Strictly text/initials only. Use `Avatar` component from Shadcn with `AvatarFallback` showing 2 initials. Randomize background colors of avatars for visual variety (bg-red-100, bg-blue-100, etc).",
+    "6. DUMMY DATA: Create a robust `mockData.js` file with 5 jobs and ~10 candidates per sourcing channel. Use the provided image URLs for company logos.",
+    "7. NAVIGATION: Clicking a Job Card > Goes to Job Details > Default to 'Sourcing' stage active.",
+    "8. ROUTING: Use React Router. /jobs (list), /jobs/:id (details)."
+  ],
+  "universal_guidelines": [
+    "Avoid generic centered layouts. Use asymmetrical grids.",
+    "Use 2-3x more spacing than typical (p-6, p-8).",
+    "Dark colors look good when used independently without gradients.",
+    "Every interaction needs micro-animations.",
+    "Use 'sonner' for toasts.",
+    "Add 'data-testid' to all interactive elements."
+  ]
+}
