@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Send, Sparkles, X, MessageSquare, Mail, MessageCircle, Linkedin, Check, Loader2 } from "lucide-react";
+import { Send, Sparkles, X, MessageSquare, Mail, MessageCircle, Linkedin, Check, Loader2, Settings } from "lucide-react";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
-import { initialChatMessages } from "../../data/mockData";
+import { initialChatMessages, defaultRules } from "../../data/mockData";
 import { jobs, getInitials, getAvatarColor } from "../../data/mockData";
 
 const channels = [
@@ -14,16 +14,16 @@ const channels = [
 ];
 
 const searchQuestions = [
-  { key: "must_have", question: "What are the must-have skills you're looking for? Please list the specific technical or domain skills the candidate must possess.", placeholder: "e.g. Go, Kubernetes, 5+ years distributed systems..." },
-  { key: "exclude", question: "Are there any skills, traits, or backgrounds you want to exclude from the search?", placeholder: "e.g. No freshers, avoid candidates from consulting firms..." },
-  { key: "companies", question: "Any specific companies or company categories you'd like to target?", placeholder: "e.g. FAANG, funded startups, fintech companies..." },
+  { key: "must_have", question: "What are the must-have skills you're looking for? List the specific technical or domain skills the candidate must possess.", placeholder: "e.g. Go, Kubernetes, 5+ years distributed systems..." },
+  { key: "exclude", question: "Any skills, traits, or backgrounds you want to exclude from the search?", placeholder: "e.g. No freshers, avoid consulting firms..." },
+  { key: "companies", question: "Any specific companies or company categories you'd like to target?", placeholder: "e.g. FAANG, funded startups, fintech..." },
   { key: "sources", question: "Which sources should I search on?", placeholder: "Select sources below" },
 ];
 
 const sourceOptions = [
-  { key: "talentMatch", label: "Internal Database", icon: "db" },
-  { key: "syndication", label: "Job Board Profiles", icon: "globe" },
-  { key: "autoSourcing", label: "LinkedIn", icon: "linkedin" },
+  { key: "talentMatch", label: "Internal Database" },
+  { key: "syndication", label: "Job Board Profiles" },
+  { key: "autoSourcing", label: "LinkedIn" },
 ];
 
 const generateOutreachMessage = (channel, candidates, jobId) => {
@@ -36,7 +36,7 @@ const generateOutreachMessage = (channel, candidates, jobId) => {
   if (channel === "linkedin") {
     return `Hi ${name},\n\nI'm reaching out from 1Recruit Technologies \u2014 we're hiring a ${job.title} for our ${job.location} office.\n\n\u2022 ${job.experience} experience\n\u2022 ${job.salary} compensation\n\u2022 Skills: ${job.skills.slice(0, 3).join(", ")}\n\u2022 Notice Period: Immediate to 30 days\n\nApply: ${link}\n\nBest,\n1Recruit Talent Team`;
   }
-  return `Subject: ${job.title} Opportunity at 1Recruit Technologies \u2013 ${job.location}\n\nDear ${name},\n\nI\u2019m reaching out regarding an exciting role of ${job.title} at 1Recruit Technologies, ${job.location}.\n\nRole Highlights:\n\u2022 Department: ${job.department}\n\u2022 Experience: ${job.experience}\n\u2022 Compensation: ${job.salary}\n\u2022 Notice Period: Immediate to 30 days preferred\n\nKey Skills: ${job.skills.join(", ")}\n\nApply here: ${link}\n\nBest regards,\n1Recruit Talent Acquisition`;
+  return `Subject: ${job.title} Opportunity at 1Recruit Technologies \u2013 ${job.location}\n\nDear ${name},\n\nI\u2019m reaching out regarding the ${job.title} role at 1Recruit Technologies, ${job.location}.\n\nRole Highlights:\n\u2022 Department: ${job.department}\n\u2022 Experience: ${job.experience}\n\u2022 Compensation: ${job.salary}\n\u2022 Notice Period: Immediate to 30 days preferred\n\nKey Skills: ${job.skills.join(", ")}\n\nApply here: ${link}\n\nBest regards,\n1Recruit Talent Acquisition`;
 };
 
 export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outreachCandidates, onModeChange, onSearchStart }) => {
@@ -49,14 +49,14 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
   const [outreachStep, setOutreachStep] = useState("channel");
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [draftMessage, setDraftMessage] = useState("");
+  const [rules, setRules] = useState(defaultRules);
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
+  const prevModeRef = useRef("default");
 
   const scrollToBottom = useCallback(() => {
     setTimeout(() => {
-      if (scrollRef.current) {
-        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-      }
+      if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }, 50);
   }, []);
 
@@ -68,25 +68,32 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
     setMessages((prev) => [...prev, { id: `msg-${Date.now()}-${Math.random()}`, role, content, timestamp: now() }]);
   }, []);
 
-  // Handle outreach trigger from parent
+  // Outreach trigger
   useEffect(() => {
-    if (chatMode === "outreach" && outreachCandidates.length > 0 && outreachStep === "channel") {
+    if (chatMode === "outreach" && outreachCandidates.length > 0 && prevModeRef.current !== "outreach") {
       const names = outreachCandidates.map((c) => c.name.split(" ")[0]).join(", ");
       addMsg("assistant", `I'll help you reach out to ${outreachCandidates.length > 1 ? `${outreachCandidates.length} candidates: ${names}` : names}. How would you like to contact them?`);
       setOutreachStep("channel");
     }
-  }, [chatMode, outreachCandidates, addMsg, outreachStep]);
+    prevModeRef.current = chatMode;
+  }, [chatMode, outreachCandidates, addMsg]);
 
-  // Handle search trigger from parent
+  // Search trigger
   useEffect(() => {
+    if (chatMode === "search" && searchStep === 0 && prevModeRef.current === "search") return;
     if (chatMode === "search" && searchStep === 0) {
-      addMsg("assistant", "Let\u2019s refine your sourcing criteria. I\u2019ll ask you a few questions to find the best candidates.");
-      setTimeout(() => {
-        addMsg("assistant", searchQuestions[0].question);
-        setSearchStep(1);
-      }, 800);
+      addMsg("assistant", "Let\u2019s refine your sourcing criteria. I\u2019ll ask a few questions to find the best candidates.");
+      setTimeout(() => { addMsg("assistant", searchQuestions[0].question); setSearchStep(1); }, 800);
     }
   }, [chatMode, searchStep, addMsg]);
+
+  // Rules trigger
+  useEffect(() => {
+    if (chatMode === "rules" && prevModeRef.current !== "rules") {
+      const rulesText = rules.map((r) => `${r.active ? "\u2705" : "\u2b1c"} If ${r.trigger.toLowerCase()} \u2192 ${r.action}`).join("\n");
+      addMsg("assistant", `Here are your current communication rules:\n\n${rulesText}\n\nYou can type a new rule (e.g. "send reminder if no response in 48 hrs") or say "done" to finish.`);
+    }
+  }, [chatMode, addMsg, rules]);
 
   const handleSend = () => {
     if (!inputValue.trim()) return;
@@ -94,52 +101,67 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
     const val = inputValue;
     setInputValue("");
 
-    if (chatMode === "outreach" && outreachStep === "compose") {
-      // User modified message - treat as confirmation
-      setDraftMessage(val);
-      setIsTyping(true);
-      setTimeout(() => {
-        addMsg("assistant", `Message updated. Ready to send via ${channels.find((c) => c.key === selectedChannel)?.label} to ${outreachCandidates.length} candidate${outreachCandidates.length > 1 ? "s" : ""}. Type "send" to confirm or keep editing.`);
-        setIsTyping(false);
-      }, 600);
-      return;
-    }
-
-    if (chatMode === "outreach" && outreachStep === "confirm") {
+    // Outreach compose/confirm
+    if (chatMode === "outreach" && (outreachStep === "compose" || outreachStep === "confirm")) {
       if (val.toLowerCase().includes("send") || val.toLowerCase().includes("yes") || val.toLowerCase().includes("confirm")) {
         setIsTyping(true);
         setTimeout(() => {
           addMsg("assistant", `Done! Your ${channels.find((c) => c.key === selectedChannel)?.label} message has been queued for ${outreachCandidates.length} candidate${outreachCandidates.length > 1 ? "s" : ""}. They\u2019ll receive it shortly.`);
           setIsTyping(false);
-          setOutreachStep("channel");
-          setSelectedChannel(null);
-          setDraftMessage("");
+          resetOutreach();
           onModeChange("default");
         }, 1200);
+      } else {
+        setDraftMessage(val);
+        setIsTyping(true);
+        setTimeout(() => {
+          addMsg("assistant", `Message updated. Type "send" to confirm, or keep editing.`);
+          setIsTyping(false);
+          setOutreachStep("confirm");
+        }, 600);
       }
       return;
     }
 
-    if (chatMode === "search") {
-      const currentQ = searchStep;
-      if (currentQ >= 1 && currentQ <= 3) {
-        setSearchAnswers((prev) => ({ ...prev, [searchQuestions[currentQ - 1].key]: val }));
+    // Search Q&A
+    if (chatMode === "search" && searchStep >= 1 && searchStep <= 3) {
+      setSearchAnswers((prev) => ({ ...prev, [searchQuestions[searchStep - 1].key]: val }));
+      setIsTyping(true);
+      setTimeout(() => {
+        setIsTyping(false);
+        if (searchStep < 3) {
+          addMsg("assistant", searchQuestions[searchStep].question);
+          setSearchStep(searchStep + 1);
+        } else {
+          addMsg("assistant", searchQuestions[3].question);
+          setSearchStep(4);
+        }
+      }, 800);
+      return;
+    }
+
+    // Rules mode
+    if (chatMode === "rules") {
+      if (val.toLowerCase() === "done" || val.toLowerCase() === "save") {
         setIsTyping(true);
         setTimeout(() => {
+          addMsg("assistant", "Rules saved. I\u2019ll apply these to all outgoing communications and monitor responses accordingly.");
           setIsTyping(false);
-          if (currentQ < 3) {
-            addMsg("assistant", searchQuestions[currentQ].question);
-            setSearchStep(currentQ + 1);
-          } else {
-            addMsg("assistant", searchQuestions[3].question);
-            setSearchStep(4);
-          }
+          onModeChange("default");
+        }, 800);
+      } else {
+        setIsTyping(true);
+        setTimeout(() => {
+          const newRule = { id: `rule-${Date.now()}`, trigger: val, action: val, active: true };
+          setRules((prev) => [...prev, newRule]);
+          addMsg("assistant", `Rule added: "${val}"\n\nType another rule or say "done" to save.`);
+          setIsTyping(false);
         }, 800);
       }
       return;
     }
 
-    // Default mode - freeform chat
+    // Default freeform
     setIsTyping(true);
     setTimeout(() => {
       const responses = [
@@ -159,7 +181,7 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
     const msg = generateOutreachMessage(ch, outreachCandidates, jobId);
     setDraftMessage(msg);
     setTimeout(() => {
-      addMsg("assistant", "Here\u2019s your draft message. You can edit it in the input below, or confirm to send:");
+      addMsg("assistant", "Here\u2019s your draft message. You can edit it below, or confirm to send:");
       setOutreachStep("compose");
       setIsTyping(false);
     }, 600);
@@ -170,9 +192,7 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
     setTimeout(() => {
       addMsg("assistant", `Done! Your ${channels.find((c) => c.key === selectedChannel)?.label} message has been queued for ${outreachCandidates.length} candidate${outreachCandidates.length > 1 ? "s" : ""}. They\u2019ll receive it shortly.`);
       setIsTyping(false);
-      setOutreachStep("channel");
-      setSelectedChannel(null);
-      setDraftMessage("");
+      resetOutreach();
       onModeChange("default");
     }, 1200);
   };
@@ -187,7 +207,7 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
     setIsTyping(true);
     setTimeout(() => {
       const summary = Object.entries(searchAnswers).map(([k, v]) => `\u2022 ${k === "must_have" ? "Must-have" : k === "exclude" ? "Exclude" : "Companies"}: ${v}`).join("\n");
-      addMsg("assistant", `Starting a refined search with your criteria:\n${summary}\n\u2022 Sources: ${srcLabels}\n\nSearching now\u2026 I\u2019ll update the candidate lists as results come in.`);
+      addMsg("assistant", `Starting a refined search:\n${summary}\n\u2022 Sources: ${srcLabels}\n\nSearching now\u2026 I\u2019ll update the candidate lists as results come in.`);
       setIsTyping(false);
       onSearchStart(selectedSources);
       setSearchStep(0);
@@ -197,10 +217,14 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
     }, 1000);
   };
 
-  const handleCancelMode = () => {
+  const resetOutreach = () => {
     setOutreachStep("channel");
     setSelectedChannel(null);
     setDraftMessage("");
+  };
+
+  const handleCancelMode = () => {
+    resetOutreach();
     setSearchStep(0);
     setSearchAnswers({});
     setSelectedSources([]);
@@ -210,17 +234,15 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
 
   if (!isVisible) {
     return (
-      <button
-        data-testid="chat-panel-toggle-open"
-        onClick={onToggle}
-        className="fixed right-4 bottom-4 z-50 h-12 w-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg hover:bg-indigo-700 transition-colors btn-press"
-      >
+      <button data-testid="chat-panel-toggle-open" onClick={onToggle}
+        className="fixed right-4 bottom-4 z-50 h-12 w-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg hover:bg-indigo-700 transition-colors btn-press">
         <MessageSquare className="h-5 w-5" />
       </button>
     );
   }
 
-  const modeLabel = chatMode === "outreach" ? "Outreach" : chatMode === "search" ? "Refine Search" : null;
+  const modeLabels = { outreach: "Outreach", search: "Refine Search", rules: "Rules" };
+  const modeLabel = modeLabels[chatMode] || null;
 
   return (
     <div data-testid="chat-panel" className="w-[380px] flex-shrink-0 border-l border-slate-200 bg-white flex flex-col h-full">
@@ -231,35 +253,26 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
             <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-slate-800" style={{ fontFamily: 'Manrope, sans-serif' }}>
-              Sourcing Co-pilot
-            </h3>
+            <h3 className="text-sm font-semibold text-slate-800" style={{ fontFamily: 'Manrope, sans-serif' }}>Sourcing Co-pilot</h3>
             <span className="flex items-center gap-1 text-[10px] text-emerald-600">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 pulse-dot" />
-              Active
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 pulse-dot" /> Active
             </span>
           </div>
         </div>
         <div className="flex items-center gap-1.5">
-          {modeLabel && (
-            <Badge variant="outline" className="text-[10px] bg-indigo-50 text-indigo-600 border-indigo-200">
-              {modeLabel}
-            </Badge>
-          )}
+          {modeLabel && <Badge variant="outline" className="text-[10px] bg-indigo-50 text-indigo-600 border-indigo-200">{modeLabel}</Badge>}
           <button data-testid="chat-panel-toggle-close" onClick={onToggle} className="h-7 w-7 rounded-md hover:bg-slate-100 flex items-center justify-center transition-colors">
             <X className="h-3.5 w-3.5 text-slate-400" />
           </button>
         </div>
       </div>
 
-      {/* Context banner */}
+      {/* Context */}
       {jobTitle && (
         <div className="px-4 py-2 bg-indigo-50/50 border-b border-indigo-100/50 flex-shrink-0 flex items-center justify-between">
           <p className="text-[11px] text-indigo-600 font-medium">Context: {jobTitle}</p>
           {chatMode !== "default" && (
-            <button data-testid="cancel-mode-btn" onClick={handleCancelMode} className="text-[10px] text-slate-400 hover:text-slate-600 underline">
-              Cancel
-            </button>
+            <button data-testid="cancel-mode-btn" onClick={handleCancelMode} className="text-[10px] text-slate-400 hover:text-slate-600 underline">Cancel</button>
           )}
         </div>
       )}
@@ -296,7 +309,7 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
             </div>
           )}
 
-          {/* Outreach: draft message preview */}
+          {/* Outreach: draft message */}
           {chatMode === "outreach" && outreachStep === "compose" && draftMessage && !isTyping && (
             <div className="chat-bubble-enter">
               <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
@@ -321,9 +334,7 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
                   </Button>
                   <Button size="sm" variant="outline" data-testid="edit-msg-btn"
                     onClick={() => { setInputValue(draftMessage); setOutreachStep("confirm"); inputRef.current?.focus(); }}
-                    className="text-xs">
-                    Edit
-                  </Button>
+                    className="text-xs">Edit</Button>
                 </div>
               </div>
             </div>
@@ -337,9 +348,7 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
                 {sourceOptions.map((src) => (
                   <button key={src.key} data-testid={`source-option-${src.key}`} onClick={() => handleSourceToggle(src.key)}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg border text-sm transition-all ${
-                      selectedSources.includes(src.key)
-                        ? "bg-indigo-50 border-indigo-200 text-indigo-700"
-                        : "bg-white border-slate-200 text-slate-600 hover:border-slate-300"
+                      selectedSources.includes(src.key) ? "bg-indigo-50 border-indigo-200 text-indigo-700" : "bg-white border-slate-200 text-slate-600 hover:border-slate-300"
                     }`}>
                     <div className={`h-4 w-4 rounded border flex items-center justify-center ${
                       selectedSources.includes(src.key) ? "bg-indigo-600 border-indigo-600" : "border-slate-300"
@@ -358,7 +367,7 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
             </div>
           )}
 
-          {/* Typing indicator */}
+          {/* Typing */}
           {isTyping && (
             <div className="flex justify-start chat-bubble-enter">
               <div className="bg-slate-100 rounded-xl rounded-bl-sm px-4 py-3 flex items-center gap-1.5">
@@ -377,11 +386,12 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
           <input ref={inputRef} data-testid="chat-input" type="text" value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder={chatMode === "search" && searchStep >= 1 && searchStep <= 3
-              ? searchQuestions[searchStep - 1].placeholder
-              : chatMode === "outreach" && outreachStep === "confirm"
-              ? "Edit the message and press Enter..."
-              : "Ask the co-pilot..."}
+            placeholder={
+              chatMode === "search" && searchStep >= 1 && searchStep <= 3 ? searchQuestions[searchStep - 1].placeholder
+              : chatMode === "rules" ? 'Type a rule or say "done"...'
+              : chatMode === "outreach" && outreachStep === "confirm" ? "Edit the message and press Enter..."
+              : "Ask the co-pilot..."
+            }
             className="flex-1 bg-transparent text-sm text-slate-700 placeholder:text-slate-400 outline-none" />
           <Button data-testid="chat-send-button" size="sm" onClick={handleSend} disabled={!inputValue.trim()}
             className="h-7 w-7 p-0 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400">
