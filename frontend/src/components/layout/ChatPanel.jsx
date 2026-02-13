@@ -109,6 +109,23 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
       setNewRuleStep(0);
       setNewRuleData({});
     }
+    // Screening mode triggers
+    if (chatMode === "autoai_call" && outreachCandidates.length > 0 && prevModeRef.current !== "autoai_call") {
+      const names = outreachCandidates.map((c) => c.name.split(" ")[0]).join(", ");
+      addMsg("assistant", `Initiating AutoAI screening call for ${outreachCandidates.length > 1 ? `${outreachCandidates.length} candidates: ${names}` : names}.\n\nThe AI will:\n• Introduce the role and company\n• Ask about current availability\n• Gauge interest level\n• Schedule follow-up if interested\n\nShall I proceed?`);
+    }
+    if (chatMode === "priority_review" && outreachCandidates.length > 0 && prevModeRef.current !== "priority_review") {
+      const names = outreachCandidates.map((c) => c.name.split(" ")[0]).join(", ");
+      addMsg("assistant", `Sending ${outreachCandidates.length > 1 ? `${outreachCandidates.length} candidates` : names} for Priority Review.\n\nThis will:\n• Flag candidate(s) for immediate hiring manager review\n• Send notification to the hiring team\n• Add to priority queue\n\nConfirm to proceed?`);
+    }
+    if (chatMode === "screenai_call" && outreachCandidates.length > 0 && prevModeRef.current !== "screenai_call") {
+      const names = outreachCandidates.map((c) => c.name.split(" ")[0]).join(", ");
+      addMsg("assistant", `Scheduling ScreenAI deep-dive call for ${names}.\n\nScreenAI will conduct a detailed technical and cultural fit assessment including:\n• Technical skills validation\n• Role-specific questions\n• Compensation expectations\n• Notice period and availability\n\nWould you like to customize the call script or proceed with default?`);
+    }
+    if (chatMode === "screening_rules" && prevModeRef.current !== "screening_rules") {
+      setNewRuleStep(0);
+      setNewRuleData({});
+    }
     prevModeRef.current = chatMode;
   }, [chatMode, outreachCandidates, searchStep, addMsg]);
 
