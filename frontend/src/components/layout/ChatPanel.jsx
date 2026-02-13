@@ -53,8 +53,9 @@ const generateOutreachMessage = (channel, candidates, jobId) => {
   return `Subject: ${job.title} Opportunity \u2013 ${job.location}\n\nDear ${name},\n\nI\u2019m reaching out regarding the ${job.title} role at 1Recruit Technologies, ${job.location}.\n\n\u2022 Experience: ${job.experience}\n\u2022 Compensation: ${job.salary}\n\u2022 Notice Period: Immediate to 30 days\n\nKey Skills: ${job.skills.join(", ")}\n\nApply here: ${link}\n\nBest regards,\n1Recruit Talent Acquisition`;
 };
 
-export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outreachCandidates, onModeChange, onSearchStart }) => {
-  const [messages, setMessages] = useState(initialChatMessages);
+export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outreachCandidates, onModeChange, onSearchStart, activeStage = "sourcing" }) => {
+  const isScreening = activeStage === "recruitment";
+  const [messages, setMessages] = useState(isScreening ? screeningChatMessages : initialChatMessages);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [searchStep, setSearchStep] = useState(0);
@@ -64,11 +65,22 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [draftMessage, setDraftMessage] = useState("");
   const [currentRules, setCurrentRules] = useState(defaultRulesData);
+  const [screeningCurrentRules, setScreeningCurrentRules] = useState(screeningRules);
   const [newRuleStep, setNewRuleStep] = useState(0);
   const [newRuleData, setNewRuleData] = useState({});
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
   const prevModeRef = useRef("default");
+  const prevStageRef = useRef(activeStage);
+
+  // Reset messages when stage changes
+  useEffect(() => {
+    if (prevStageRef.current !== activeStage) {
+      setMessages(activeStage === "recruitment" ? screeningChatMessages : initialChatMessages);
+      prevStageRef.current = activeStage;
+      prevModeRef.current = "default";
+    }
+  }, [activeStage]);
 
   const scrollToBottom = useCallback(() => {
     setTimeout(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, 60);
