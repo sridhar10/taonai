@@ -151,6 +151,31 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
       return;
     }
 
+    // Screening actions (AutoAI, Priority Review, ScreenAI)
+    if (chatMode === "autoai_call" || chatMode === "priority_review" || chatMode === "screenai_call") {
+      if (val.toLowerCase().includes("yes") || val.toLowerCase().includes("proceed") || val.toLowerCase().includes("confirm")) {
+        setIsTyping(true);
+        setTimeout(() => {
+          if (chatMode === "autoai_call") {
+            addMsg("assistant", `AutoAI call initiated for ${outreachCandidates.length} candidate${outreachCandidates.length > 1 ? "s" : ""}.\n\n✓ Call queue updated\n✓ AI script loaded\n✓ Callbacks scheduled\n\nI'll notify you when calls are completed and provide transcripts.`);
+          } else if (chatMode === "priority_review") {
+            addMsg("assistant", `Priority Review sent for ${outreachCandidates.length} candidate${outreachCandidates.length > 1 ? "s" : ""}.\n\n✓ Hiring manager notified\n✓ Added to priority queue\n✓ Review deadline set for 24 hours\n\nYou'll be notified when feedback is received.`);
+          } else if (chatMode === "screenai_call") {
+            addMsg("assistant", `ScreenAI deep-dive scheduled for ${outreachCandidates.map(c => c.name.split(" ")[0]).join(", ")}.\n\n✓ Technical assessment configured\n✓ Call slot reserved\n✓ Candidate notified\n\nI'll share the full transcript and assessment after the call.`);
+          }
+          setIsTyping(false);
+          onModeChange("default");
+        }, 1500);
+      } else if (val.toLowerCase().includes("cancel") || val.toLowerCase().includes("no")) {
+        addMsg("assistant", "No problem. Let me know if you need anything else.");
+        onModeChange("default");
+      } else {
+        setIsTyping(true);
+        setTimeout(() => { addMsg("assistant", "Say \"yes\" to proceed or \"cancel\" to go back."); setIsTyping(false); }, 500);
+      }
+      return;
+    }
+
     // Search Q&A
     if (chatMode === "search" && searchStep >= 1 && searchStep <= 3) {
       setSearchAnswers((prev) => ({ ...prev, [searchQuestions[searchStep - 1].key]: val }));
@@ -185,6 +210,28 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
       return;
     }
 
+    // Screening Rules - new rule Q&A
+    if (chatMode === "screening_rules" && newRuleStep >= 1 && newRuleStep <= 3) {
+      const key = screeningRuleQuestions[newRuleStep - 1].key;
+      setNewRuleData((prev) => ({ ...prev, [key]: val }));
+      setIsTyping(true);
+      setTimeout(() => {
+        setIsTyping(false);
+        if (newRuleStep < 3) {
+          addMsg("assistant", screeningRuleQuestions[newRuleStep].question);
+          setNewRuleStep(newRuleStep + 1);
+        } else {
+          const data = { ...newRuleData, [key]: val };
+          const label = `${data.trigger} → ${data.action} (${data.timing || "immediately"})`;
+          setScreeningCurrentRules((prev) => [...prev, { id: `scr-r-${Date.now()}`, trigger: data.trigger, action: label, active: true }]);
+          setNewRuleStep(0);
+          setNewRuleData({});
+          addMsg("assistant", `New AutoAI rule added:\n\n✓ ${label}\n\nSay "add rule" to add another or "done" to save.`);
+        }
+      }, 700);
+      return;
+    }
+
     // Rules - commands
     if (chatMode === "rules") {
       if (val.toLowerCase() === "done" || val.toLowerCase() === "save") {
@@ -203,10 +250,32 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
       return;
     }
 
+    // Screening Rules - commands
+    if (chatMode === "screening_rules") {
+      if (val.toLowerCase() === "done" || val.toLowerCase() === "save") {
+        setIsTyping(true);
+        setTimeout(() => {
+          addMsg("assistant", `${screeningCurrentRules.filter((r) => r.active).length} AutoAI rules are now active.\n\nI'll automatically:\n• Initiate calls based on your rules\n• Send follow-ups for no-response\n• Notify you of interested candidates`);
+          setIsTyping(false); onModeChange("default");
+        }, 700);
+      } else if (val.toLowerCase().includes("add")) {
+        addMsg("assistant", screeningRuleQuestions[0].question);
+        setNewRuleStep(1);
+      } else {
+        setIsTyping(true);
+        setTimeout(() => { addMsg("assistant", "Say \"add rule\" to create a new rule, or \"done\" to save and exit."); setIsTyping(false); }, 500);
+      }
+      return;
+    }
+
     // Default
     setIsTyping(true);
     setTimeout(() => {
-      const responses = [
+      const responses = isScreening ? [
+        "Got it! I'll update the screening workflow accordingly.",
+        "Understood. I've noted that for the candidate assessment.",
+        "I'll factor that into the screening process. Updates coming shortly.",
+      ] : [
         "Got it! I'll refine the candidate search based on your criteria.",
         "Understood. I've updated the sourcing filters accordingly.",
         "I'll factor that into the scoring model. Rankings will update shortly.",
