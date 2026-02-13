@@ -187,3 +187,55 @@ export const initialChatMessages = [
     timestamp: "10:00 AM",
   },
 ];
+
+export const screeningChatMessages = [
+  {
+    id: "scr-msg-1",
+    role: "assistant",
+    content: "Hi! I'm your Screening Co-pilot. I'll help you manage candidate screening calls, track responses, and automate follow-ups.",
+    timestamp: "10:00 AM",
+  },
+  {
+    id: "scr-msg-2",
+    role: "assistant",
+    content: "You have 12 candidates ready for screening. 4 have pending calls, 5 showed interest, and 3 are awaiting response. Would you like to set up screening rules or initiate calls?",
+    timestamp: "10:00 AM",
+  },
+];
+
+// Screening stage candidates (moved from sourcing)
+export const screeningCandidates = [
+  { id: "scr-001", name: "Meera Joshi", currentRole: "Principal Engineer at Microsoft", experience: "9 years", transitionType: "auto", sourceStage: "Sourcing", movedDate: "2026-01-21", status: "pending_call" },
+  { id: "scr-002", name: "Sanjay Hegde", currentRole: "Staff SWE at Uber", experience: "8 years", transitionType: "manual", sourceStage: "Sourcing", movedDate: "2026-01-21", status: "pending_call" },
+  { id: "scr-003", name: "Arjun Krishnamurthy", currentRole: "Staff Engineer at Flipkart", experience: "7 years", transitionType: "auto", sourceStage: "Sourcing", movedDate: "2026-01-20", status: "call_completed" },
+  { id: "scr-004", name: "Priya Sharma", currentRole: "Senior SDE at Amazon", experience: "6 years", transitionType: "manual", sourceStage: "Sourcing", movedDate: "2026-01-23", status: "call_completed" },
+  { id: "scr-005", name: "Karthik Iyer", currentRole: "Senior Developer at Infosys", experience: "6 years", transitionType: "auto", sourceStage: "Sourcing", movedDate: "2026-01-22", status: "pending_call" },
+  { id: "scr-006", name: "Nandini Rao", currentRole: "Tech Lead at Atlassian", experience: "7 years", transitionType: "manual", sourceStage: "Sourcing", movedDate: "2026-01-24", status: "call_scheduled" },
+  { id: "scr-007", name: "Rahul Menon", currentRole: "Tech Lead at Razorpay", experience: "8 years", transitionType: "auto", sourceStage: "Sourcing", movedDate: "2026-01-23", status: "pending_call" },
+  { id: "scr-008", name: "Deepika Nair", currentRole: "Platform Engineer at Swiggy", experience: "5 years", transitionType: "manual", sourceStage: "Sourcing", movedDate: "2026-01-24", status: "call_completed" },
+  { id: "scr-009", name: "Vikram Reddy", currentRole: "SDE-3 at Google", experience: "6 years", transitionType: "auto", sourceStage: "Sourcing", movedDate: "2026-01-24", status: "pending_call" },
+  { id: "scr-010", name: "Ananya Gupta", currentRole: "Backend Lead at Zerodha", experience: "7 years", transitionType: "manual", sourceStage: "Sourcing", movedDate: "2026-01-25", status: "call_scheduled" },
+  { id: "scr-011", name: "Sneha Patel", currentRole: "SDE-2 at TCS", experience: "5 years", transitionType: "auto", sourceStage: "Sourcing", movedDate: "2026-01-25", status: "call_completed" },
+  { id: "scr-012", name: "Rohan Das", currentRole: "Senior SDE at Oracle", experience: "6 years", transitionType: "manual", sourceStage: "Sourcing", movedDate: "2026-01-25", status: "pending_call" },
+];
+
+// Screening communications (calls and reviews)
+export const screeningCommunications = [
+  { id: "scr-com-001", candidateId: "scr-003", candidateName: "Arjun Krishnamurthy", currentRole: "Staff Engineer at Flipkart", mode: "autoai_call", callTime: "2026-01-20 10:30 AM", duration: "12 mins", outcome: "showed_interest", transcript: "Candidate expressed strong interest in the role. Discussed current tech stack and experience with distributed systems. Mentioned 30-day notice period. Eager to learn more about team structure and growth opportunities." },
+  { id: "scr-com-002", candidateId: "scr-004", candidateName: "Priya Sharma", currentRole: "Senior SDE at Amazon", mode: "screenai_call", callTime: "2026-01-23 02:15 PM", duration: "18 mins", outcome: "showed_interest", transcript: "Detailed discussion about role expectations. Candidate has relevant AWS and microservices experience. Asked about remote work policy and compensation bands. Positive overall sentiment, ready for next round." },
+  { id: "scr-com-003", candidateId: "scr-001", candidateName: "Meera Joshi", currentRole: "Principal Engineer at Microsoft", mode: "priority_review", callTime: "2026-01-21 09:00 AM", duration: "N/A", outcome: "pending", transcript: "Priority review sent to hiring manager. Awaiting feedback on candidate's Microsoft experience relevance and compensation expectations alignment." },
+  { id: "scr-com-004", candidateId: "scr-008", candidateName: "Deepika Nair", currentRole: "Platform Engineer at Swiggy", mode: "autoai_call", callTime: "2026-01-24 11:00 AM", duration: "8 mins", outcome: "no_response", transcript: "Call connected but candidate was in a meeting. Requested callback in 2 hours. Follow-up scheduled automatically." },
+  { id: "scr-com-005", candidateId: "scr-011", candidateName: "Sneha Patel", currentRole: "SDE-2 at TCS", mode: "autoai_call", callTime: "2026-01-25 03:30 PM", duration: "15 mins", outcome: "showed_interest", transcript: "Candidate is actively looking for product company opportunities. Strong Docker and Kubernetes skills. Available to join in 60 days. Very enthusiastic about the role." },
+  { id: "scr-com-006", candidateId: "scr-002", candidateName: "Sanjay Hegde", currentRole: "Staff SWE at Uber", mode: "priority_review", callTime: "2026-01-21 04:00 PM", duration: "N/A", outcome: "pending", transcript: "Escalated for priority review due to high match score and Uber background. Manager review pending." },
+  { id: "scr-com-007", candidateId: "scr-005", candidateName: "Karthik Iyer", currentRole: "Senior Developer at Infosys", mode: "autoai_call", callTime: "2026-01-22 10:00 AM", duration: "5 mins", outcome: "no_response", transcript: "No answer on first attempt. Voicemail left. Auto-retry scheduled for tomorrow." },
+];
+
+// Screening rules for AutoAI calls
+export const screeningRules = [
+  { id: "scr-rule-1", trigger: "New candidate in screening", action: "Initiate AutoAI call within 2 hours", active: true },
+  { id: "scr-rule-2", trigger: "No response to call", action: "Retry call within 2 hours", active: true },
+  { id: "scr-rule-3", trigger: "2 missed calls", action: "Send WhatsApp message with callback link", active: true },
+  { id: "scr-rule-4", trigger: "Candidate shows interest", action: "Schedule ScreenAI deep-dive call", active: true },
+  { id: "scr-rule-5", trigger: "High-value candidate (90+ match)", action: "Send for Priority Review immediately", active: true },
+  { id: "scr-rule-6", trigger: "No response after 3 attempts", action: "Move to nurture list and notify recruiter", active: false },
+];
