@@ -50,6 +50,11 @@ export default function JobDetailsPage() {
     }, 6000);
   }, []);
 
+  const handleSetRules = useCallback(() => {
+    setChatMode("rules");
+    setChatVisible(true);
+  }, []);
+
   const handleToggleChat = useCallback(() => {
     setChatVisible((v) => !v);
   }, []);
@@ -82,6 +87,7 @@ export default function JobDetailsPage() {
           jobId={job.id}
           onSendMessage={handleSendMessage}
           onRefineSearch={handleRefineSearch}
+          onSetRules={handleSetRules}
           searchingTabs={searchingTabs}
         />
       );
