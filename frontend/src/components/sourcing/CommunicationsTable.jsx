@@ -35,12 +35,12 @@ export const CommunicationsTable = ({ onResend, onSendNew, onSetRules }) => {
         <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
           <table className="w-full" style={{ tableLayout: "fixed" }}>
             <colgroup>
-              <col style={{ width: "15%" }} />
+              <col style={{ width: "18%" }} />
               <col style={{ width: "5%" }} />
+              <col style={{ width: "10%" }} />
               <col style={{ width: "9%" }} />
+              <col style={{ width: "38%" }} />
               <col style={{ width: "9%" }} />
-              <col style={{ width: "45%" }} />
-              <col style={{ width: "8%" }} />
               <col style={{ width: "3%" }} />
             </colgroup>
             <thead>
