@@ -159,7 +159,7 @@ export default function JobDetailsPage() {
   };
 
   const renderChatPanel = () => {
-    if (activeStage !== "sourcing") {
+    if (activeStage !== "sourcing" && activeStage !== "recruitment") {
       return null;
     }
     return (
@@ -172,6 +172,7 @@ export default function JobDetailsPage() {
         outreachCandidates={outreachCandidates}
         onModeChange={handleModeChange}
         onSearchStart={handleSearchStart}
+        activeStage={activeStage}
       />
     );
   };
