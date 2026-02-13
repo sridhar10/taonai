@@ -520,6 +520,53 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
             </div>
           )}
 
+          {/* Screening Rules: AutoAI rule cards */}
+          {chatMode === "screening_rules" && newRuleStep === 0 && !isTyping && (
+            <div className="chat-bubble-enter">
+              <div className="bg-emerald-50/50 border border-emerald-200 rounded-xl p-3 space-y-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <Bot className="h-4 w-4 text-emerald-600" />
+                  <p className="text-xs font-semibold text-emerald-700">AutoAI Call Rules</p>
+                </div>
+                {screeningCurrentRules.map((rule) => (
+                  <div key={rule.id} className={`flex items-start gap-2.5 p-2.5 rounded-lg border transition-all ${rule.active ? "bg-white border-emerald-200" : "bg-slate-50 border-slate-100 opacity-60"}`}>
+                    <button data-testid={`toggle-screening-rule-${rule.id}`} onClick={() => handleToggleRule(rule.id)}
+                      className={`mt-0.5 h-4 w-4 rounded border flex items-center justify-center flex-shrink-0 ${rule.active ? "bg-emerald-600 border-emerald-600" : "border-slate-300 bg-white"}`}>
+                      {rule.active && <Check className="h-2.5 w-2.5 text-white" />}
+                    </button>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-[11px] font-medium ${rule.active ? "text-slate-700" : "text-slate-400 line-through"}`}>{rule.trigger}</p>
+                      <p className={`text-[10px] mt-0.5 ${rule.active ? "text-slate-500" : "text-slate-400"}`}>→ {rule.action}</p>
+                    </div>
+                    <button data-testid={`delete-screening-rule-${rule.id}`} onClick={() => handleDeleteRule(rule.id)}
+                      className="text-slate-300 hover:text-rose-500 transition-colors flex-shrink-0 mt-0.5">
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+                <div className="flex gap-2 pt-2">
+                  <Button size="sm" variant="outline" data-testid="add-new-screening-rule-btn" onClick={handleStartAddRule}
+                    className="text-xs flex-1 gap-1.5 text-emerald-600 border-emerald-200 hover:bg-emerald-50">
+                    <Pencil className="h-3 w-3" /> Add Rule
+                  </Button>
+                  <Button size="sm" data-testid="save-screening-rules-btn"
+                    onClick={() => { 
+                      addMsg("user", "Done"); 
+                      setIsTyping(true);
+                      setTimeout(() => {
+                        addMsg("assistant", `${screeningCurrentRules.filter((r) => r.active).length} AutoAI rules saved.\n\nI'll automatically:\n• Initiate calls based on your rules\n• Send follow-ups for no-response\n• Notify you of interested candidates`);
+                        setIsTyping(false);
+                        onModeChange("default");
+                      }, 700);
+                    }}
+                    className="text-xs bg-emerald-600 hover:bg-emerald-700 gap-1.5">
+                    <Check className="h-3 w-3" /> Save Rules
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Typing */}
           {isTyping && (
             <div className="flex justify-start chat-bubble-enter">
