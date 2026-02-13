@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 
 class SourceRankAPITester:
-    def __init__(self, base_url="https://source-rank-flow.preview.emergentagent.com/api"):
+    def __init__(self, base_url="https://recruiter-hub-48.preview.emergentagent.com/api"):
         self.base_url = base_url
         self.tests_run = 0
         self.tests_passed = 0
