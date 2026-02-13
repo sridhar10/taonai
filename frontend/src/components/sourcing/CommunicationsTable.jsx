@@ -33,16 +33,25 @@ export const CommunicationsTable = ({ onResend, onSendNew, onSetRules }) => {
         </div>
 
         <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
-          <table className="w-full">
+          <table className="w-full" style={{ tableLayout: "fixed" }}>
+            <colgroup>
+              <col style={{ width: "18%" }} />
+              <col style={{ width: "6%" }} />
+              <col style={{ width: "10%" }} />
+              <col style={{ width: "9%" }} />
+              <col />
+              <col style={{ width: "9%" }} />
+              <col style={{ width: "5%" }} />
+            </colgroup>
             <thead>
               <tr className="bg-slate-50/80 border-b border-slate-100">
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left pl-4" style={{ width: "20%" }}>Candidate</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center" style={{ width: "7%" }}>Channel</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left" style={{ width: "11%" }}>Type</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center" style={{ width: "10%" }}>Date</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left" style={{ width: "26%" }}>Message</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center" style={{ width: "10%" }}>Status</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-right pr-4" style={{ width: "6%" }}></th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left pl-4">Candidate</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center">Channel</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left">Type</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center">Date</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left">Message</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center">Status</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-right pr-4"></th>
               </tr>
             </thead>
             <tbody>
@@ -55,7 +64,7 @@ export const CommunicationsTable = ({ onResend, onSendNew, onSetRules }) => {
                 const isExpanded = expandedId === com.id;
 
                 return (
-                  <tbody key={com.id}>
+                  <tbody key={com.id} className="border-b border-slate-50">
                     <tr
                       data-testid={`com-row-${com.id}`}
                       className="group border-b border-slate-50 transition-colors hover:bg-slate-50/50 cursor-pointer"
