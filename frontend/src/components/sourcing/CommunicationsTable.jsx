@@ -32,26 +32,17 @@ export const CommunicationsTable = ({ onResend, onSendNew, onSetRules }) => {
           </Button>
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
-          <table className="w-full" style={{ tableLayout: "fixed" }}>
-            <colgroup>
-              <col style={{ width: "18%" }} />
-              <col style={{ width: "6%" }} />
-              <col style={{ width: "10%" }} />
-              <col style={{ width: "9%" }} />
-              <col />
-              <col style={{ width: "9%" }} />
-              <col style={{ width: "5%" }} />
-            </colgroup>
+        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden overflow-x-auto">
+          <table className="w-full min-w-[700px]">
             <thead>
               <tr className="bg-slate-50/80 border-b border-slate-100">
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left pl-4">Candidate</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center">Channel</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left">Type</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center">Date</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left pl-4 w-[15%]">Candidate</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center w-[60px]">Channel</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left w-[10%]">Type</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left w-[85px]">Date</th>
                 <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left">Message</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center">Status</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-right pr-4"></th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center w-[80px]">Status</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-right pr-4 w-[36px]"></th>
               </tr>
             </thead>
             <tbody>
