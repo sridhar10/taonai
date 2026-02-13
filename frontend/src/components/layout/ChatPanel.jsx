@@ -316,16 +316,28 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
   };
 
   const handleToggleRule = (id) => {
-    setCurrentRules((prev) => prev.map((r) => r.id === id ? { ...r, active: !r.active } : r));
+    if (isScreening) {
+      setScreeningCurrentRules((prev) => prev.map((r) => r.id === id ? { ...r, active: !r.active } : r));
+    } else {
+      setCurrentRules((prev) => prev.map((r) => r.id === id ? { ...r, active: !r.active } : r));
+    }
   };
 
   const handleDeleteRule = (id) => {
-    setCurrentRules((prev) => prev.filter((r) => r.id !== id));
+    if (isScreening) {
+      setScreeningCurrentRules((prev) => prev.filter((r) => r.id !== id));
+    } else {
+      setCurrentRules((prev) => prev.filter((r) => r.id !== id));
+    }
   };
 
   const handleStartAddRule = () => {
     addMsg("user", "Add a new rule");
-    addMsg("assistant", ruleQuestions[0].question);
+    if (isScreening) {
+      addMsg("assistant", screeningRuleQuestions[0].question);
+    } else {
+      addMsg("assistant", ruleQuestions[0].question);
+    }
     setNewRuleStep(1);
   };
 
