@@ -72,6 +72,14 @@ Create a UI mockup for a sourcing agent orchestrator called "1Recruit" - a recru
 - [x] Collapsible sidebar (collapsed by default)
 - [x] 1Recruit branding integration
 - [x] **Fixed**: Communications table column layout bug (columns now properly spaced)
+- [x] **Enhanced Communications table**:
+  - Search by candidate name, message content, or type
+  - Filter by Channel (Email/WhatsApp/LinkedIn) and Status (Replied/Awaiting/Declined)
+  - Active filter indicator with pulsing dot
+  - Enhanced hover states with left border highlight
+  - Smooth row expansion animation
+  - Color-coded response sections (green/amber/rose)
+  - Empty state for no search results
 
 ## API Endpoints
 - `GET /api/jobs` - List all jobs
