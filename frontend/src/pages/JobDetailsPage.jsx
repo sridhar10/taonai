@@ -119,10 +119,12 @@ export default function JobDetailsPage() {
     }
     if (activeStage === "recruitment") {
       return (
-        <EmptyStage
-          title="Screening"
-          description="Candidates in the screening phase will appear here."
-          count={job.pipeline.recruitment}
+        <ScreeningWorkflow
+          jobId={job.id}
+          onAutoAICall={handleAutoAICall}
+          onPriorityReview={handlePriorityReview}
+          onScreenAICall={handleScreenAICall}
+          onSetRules={handleScreeningRules}
         />
       );
     }
