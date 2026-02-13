@@ -94,8 +94,8 @@ export const CommunicationsTable = ({ onResend, onSendNew, onSetRules }) => {
                       <td className="py-3">
                         <span className="text-[11px] text-slate-500 whitespace-nowrap">{com.dateSent}</span>
                       </td>
-                      <td className="py-3 pr-2">
-                        <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-2 break-words">{com.messageSummary}</p>
+                      <td className="py-3 pr-2 overflow-hidden">
+                        <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-2">{com.messageSummary}</p>
                       </td>
                       <td className="py-3 text-center">
                         <Badge variant="outline" className={`text-[10px] font-medium ${st.cls}`}>{st.label}</Badge>
