@@ -56,6 +56,30 @@ export default function JobDetailsPage() {
     setChatVisible(true);
   }, []);
 
+  // Screening handlers
+  const handleAutoAICall = useCallback((candidates) => {
+    setChatMode("autoai_call");
+    setOutreachCandidates(candidates);
+    setChatVisible(true);
+  }, []);
+
+  const handlePriorityReview = useCallback((candidates) => {
+    setChatMode("priority_review");
+    setOutreachCandidates(candidates);
+    setChatVisible(true);
+  }, []);
+
+  const handleScreenAICall = useCallback((candidates) => {
+    setChatMode("screenai_call");
+    setOutreachCandidates(candidates);
+    setChatVisible(true);
+  }, []);
+
+  const handleScreeningRules = useCallback(() => {
+    setChatMode("screening_rules");
+    setChatVisible(true);
+  }, []);
+
   const handleToggleChat = useCallback(() => {
     setChatVisible((v) => !v);
   }, []);
