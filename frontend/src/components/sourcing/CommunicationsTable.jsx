@@ -82,8 +82,8 @@ export const CommunicationsTable = ({ onResend, onSendNew, onSetRules }) => {
                       <td className="py-3">
                         <span className="text-[11px] text-slate-600">{com.messageType}</span>
                       </td>
-                      <td className="py-3 text-center">
-                        <span className="text-[11px] text-slate-500">{com.dateSent}</span>
+                      <td className="py-3">
+                        <span className="text-[11px] text-slate-500 whitespace-nowrap">{com.dateSent}</span>
                       </td>
                       <td className="py-3">
                         <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-1">{com.messageSummary}</p>
