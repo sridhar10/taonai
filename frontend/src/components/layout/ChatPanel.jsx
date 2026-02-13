@@ -359,25 +359,35 @@ export const ChatPanel = ({ jobTitle, jobId, isVisible, onToggle, chatMode, outr
     );
   }
 
-  const modeLabels = { outreach: "Outreach", search: "Refine Search", rules: "Rules" };
+  const modeLabels = { 
+    outreach: "Outreach", 
+    search: "Refine Search", 
+    rules: "Rules",
+    autoai_call: "AutoAI Call",
+    priority_review: "Priority Review",
+    screenai_call: "ScreenAI Call",
+    screening_rules: "AutoAI Rules"
+  };
+
+  const copilotTitle = isScreening ? "Screening Co-pilot" : "Sourcing Co-pilot";
 
   return (
     <div data-testid="chat-panel" className="w-[380px] flex-shrink-0 border-l border-slate-200 bg-white flex flex-col h-full">
       {/* Header */}
       <div className="h-14 flex items-center justify-between px-4 border-b border-slate-100 flex-shrink-0">
         <div className="flex items-center gap-2.5">
-          <div className="h-7 w-7 rounded-lg bg-indigo-50 flex items-center justify-center">
-            <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
+          <div className={`h-7 w-7 rounded-lg flex items-center justify-center ${isScreening ? "bg-emerald-50" : "bg-indigo-50"}`}>
+            <Sparkles className={`h-3.5 w-3.5 ${isScreening ? "text-emerald-600" : "text-indigo-600"}`} />
           </div>
           <div>
-            <h3 className="text-[13px] font-semibold text-slate-800" style={{ fontFamily: 'Manrope, sans-serif' }}>Sourcing Co-pilot</h3>
+            <h3 className="text-[13px] font-semibold text-slate-800" style={{ fontFamily: 'Manrope, sans-serif' }}>{copilotTitle}</h3>
             <span className="flex items-center gap-1 text-[10px] text-emerald-600">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 pulse-dot" /> Active
             </span>
           </div>
         </div>
         <div className="flex items-center gap-1.5">
-          {modeLabels[chatMode] && <Badge variant="outline" className="text-[10px] bg-indigo-50 text-indigo-600 border-indigo-200">{modeLabels[chatMode]}</Badge>}
+          {modeLabels[chatMode] && <Badge variant="outline" className={`text-[10px] ${isScreening ? "bg-emerald-50 text-emerald-600 border-emerald-200" : "bg-indigo-50 text-indigo-600 border-indigo-200"}`}>{modeLabels[chatMode]}</Badge>}
           <button data-testid="chat-panel-toggle-close" onClick={onToggle} className="h-7 w-7 rounded-md hover:bg-slate-100 flex items-center justify-center transition-colors">
             <X className="h-3.5 w-3.5 text-slate-400" />
           </button>
