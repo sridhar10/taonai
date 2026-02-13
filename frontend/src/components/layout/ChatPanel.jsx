@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Send, Sparkles, X, MessageSquare, Mail, MessageCircle, Linkedin, Check, Loader2, Pencil, Trash2 } from "lucide-react";
+import { Send, Sparkles, X, MessageSquare, Mail, MessageCircle, Linkedin, Check, Loader2, Pencil, Trash2, Bot, Star, Phone } from "lucide-react";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
-import { initialChatMessages } from "../../data/mockData";
+import { initialChatMessages, screeningChatMessages, screeningRules } from "../../data/mockData";
 import { jobs, getInitials, getAvatarColor } from "../../data/mockData";
 
 const channels = [
