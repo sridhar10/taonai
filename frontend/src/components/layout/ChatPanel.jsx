@@ -38,6 +38,12 @@ const ruleQuestions = [
   { key: "channel", question: "Which channel should this apply to? (all, email, whatsapp, linkedin)", placeholder: "e.g. all channels" },
 ];
 
+const screeningRuleQuestions = [
+  { key: "trigger", question: "What should trigger this AutoAI rule? (e.g., new candidate in screening, no response after call)", placeholder: "e.g. new candidate in screening..." },
+  { key: "action", question: "What action should be taken? (e.g., initiate call, send WhatsApp, schedule follow-up)", placeholder: "e.g. initiate AutoAI call..." },
+  { key: "timing", question: "When should this happen? (e.g., immediately, after 2 hours, next business day)", placeholder: "e.g. within 2 hours" },
+];
+
 const generateOutreachMessage = (channel, candidates, jobId) => {
   const job = jobs.find((j) => j.id === jobId) || jobs[0];
   const name = candidates.length === 1 ? candidates[0].name.split(" ")[0] : "there";
