@@ -4,6 +4,7 @@ import { DashboardLayout } from "../components/layout/DashboardLayout";
 import { ChatPanel } from "../components/layout/ChatPanel";
 import { PipelineStepper } from "../components/jobs/PipelineStepper";
 import { SourcingWorkflow } from "../components/sourcing/SourcingWorkflow";
+import { ScreeningWorkflow } from "../components/screening/ScreeningWorkflow";
 import { EmptyStage } from "../components/jobs/EmptyStage";
 import { jobs } from "../data/mockData";
 import { Badge } from "../components/ui/badge";
