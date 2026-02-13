@@ -97,23 +97,32 @@ export const CandidateTable = ({ candidates, onSendMessage, onMoveToNext }) => {
 
         {/* Table */}
         <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
-          <table className="w-full">
+          <table className="w-full" style={{ tableLayout: "fixed" }}>
+            <colgroup>
+              <col style={{ width: "40px" }} />
+              <col style={{ width: "16%" }} />
+              <col style={{ width: "16%" }} />
+              <col style={{ width: "7%" }} />
+              <col style={{ width: "5%" }} />
+              <col style={{ width: "8%" }} />
+              <col />
+              <col style={{ width: "8%" }} />
+            </colgroup>
             <thead>
               <tr className="bg-slate-50/80 border-b border-slate-100">
-                <th className="w-10 pl-4 py-3 text-left">
+                <th className="pl-4 py-3 text-left">
                   <Checkbox data-testid="select-all-candidates" checked={isAllSelected} onCheckedChange={toggleAll} />
                 </th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left" style={{ width: "18%" }}>Candidate</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left" style={{ width: "18%" }}>Current Role</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center" style={{ width: "7%" }}>Exp.</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center" style={{ width: "6%" }}>Source</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center" style={{ width: "9%" }}>Score</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left" style={{ width: "32%" }}>Match Reason</th>
-                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-right pr-4" style={{ width: "10%" }}>Actions</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left">Candidate</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left">Current Role</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center">Exp.</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center">Source</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-center">Score</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-left">Match Reason</th>
+                <th className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider py-3 text-right pr-4">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              {filtered.map((c) => {
+            {filtered.map((c) => {
                 const initials = getInitials(c.name);
                 const colorClass = getAvatarColor(c.name);
                 const scoreInfo = getScoreLabel(c.matchScore);
@@ -123,8 +132,8 @@ export const CandidateTable = ({ candidates, onSendMessage, onMoveToNext }) => {
                 const SrcIcon = src.icon;
 
                 return (
-                  <tbody key={c.id}>
-                    <tr data-testid={`candidate-row-${c.id}`} className={`group border-b border-slate-50 transition-colors hover:bg-slate-50/50 ${isSelected ? "bg-indigo-50/40" : ""}`}>
+                  <tbody key={c.id} className="border-b border-slate-50">
+                    <tr data-testid={`candidate-row-${c.id}`} className={`group transition-colors hover:bg-slate-50/50 ${isSelected ? "bg-indigo-50/40" : ""}`}>
                       <td className="pl-4 py-3">
                         <Checkbox data-testid={`select-candidate-${c.id}`} checked={isSelected} onCheckedChange={() => toggleOne(c.id)} />
                       </td>
@@ -218,17 +227,16 @@ export const CandidateTable = ({ candidates, onSendMessage, onMoveToNext }) => {
                   </tbody>
                 );
               })}
-              {filtered.length === 0 && (
-                <tbody>
-                  <tr>
-                    <td colSpan={8} className="text-center py-12">
-                      <p className="text-sm text-slate-400">No candidates match your filters</p>
-                      <button onClick={clearFilters} className="text-xs text-indigo-600 hover:underline mt-1">Clear filters</button>
-                    </td>
-                  </tr>
-                </tbody>
-              )}
-            </tbody>
+            {filtered.length === 0 && (
+              <tbody>
+                <tr>
+                  <td colSpan={8} className="text-center py-12">
+                    <p className="text-sm text-slate-400">No candidates match your filters</p>
+                    <button onClick={clearFilters} className="text-xs text-indigo-600 hover:underline mt-1">Clear filters</button>
+                  </td>
+                </tr>
+              </tbody>
+            )}
           </table>
         </div>
 
