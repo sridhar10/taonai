@@ -80,6 +80,14 @@ Create a UI mockup for a sourcing agent orchestrator called "1Recruit" - a recru
   - Smooth row expansion animation
   - Color-coded response sections (green/amber/rose)
   - Empty state for no search results
+- [x] **Screening Workflow (NEW)**:
+  - Candidates table with Transition Type (Auto/Manual) and Status columns
+  - Actions dropdown: AutoAI Call, Send Priority Review, ScreenAI Call
+  - Multi-select with bulk actions (AutoAI Call, Priority Review)
+  - Communications table showing call records with Mode, Call Time, Outcome, Transcript
+  - Search and filter functionality for both tables
+  - AutoAI Rules panel with configurable automation rules
+  - Screening Co-pilot chat integration with action confirmations
 
 ## API Endpoints
 - `GET /api/jobs` - List all jobs
